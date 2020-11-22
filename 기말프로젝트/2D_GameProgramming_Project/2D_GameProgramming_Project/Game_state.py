@@ -37,25 +37,24 @@ def enter():
 
 def update():
     global game_state
-
+    
+    print(enemy.life, "   ", player.life )
     gfw.world.update();
+    enemy.melee(player)
     if game_state != STATE_IN_GAME:
         return
-    for o in gfw.world.objects_at(gfw.layer.enemy):
-        if collides_distance(o, player):
-            if o.collide(player.state) == 0:
-                player.decrease_life()
-            elif o.collide(player.state) == 1:
-                o.decrease_life()
-            dead = player.death()
-            if dead:    #GAME OVER
-                game_state = STATE_GAME_OVER
+    if collides_distance(enemy, player):
+        enemy.collide(player.state)
+        player.collide(enemy.state)
+        dead = player.death()
+        if dead == 1:    #GAME OVER
+            game_state = STATE_GAME_OVER
 def draw():
     gfw.world.draw();
 
 def handle_event(e):
     if e.type == SDL_QUIT:
-        gfw.quit()
+        gfw.quit() 
     if e.type == SDL_KEYDOWN:
         if e.key == SDLK_ESCAPE:
             gfw.pop()

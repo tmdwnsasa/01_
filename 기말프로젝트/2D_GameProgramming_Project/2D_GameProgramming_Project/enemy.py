@@ -3,7 +3,7 @@ import gfw
 import math
 
 MOVE_PPS = 300
-ATTACK_DIST = 80
+ATTACK_DIST = 2
 
 class Enemy:
     def __init__(self):
@@ -16,24 +16,26 @@ class Enemy:
         self.speed = 0
         self.life = 3
         self.back = 0
-        self.state = 0 # 0 평소 1 공격 2 낙사
+        self.state = 0 # 0 평소 1 공격 2 낙사 3무적
         self.radius = self.image.h // 40
         self.src_width = self.image.w // 5
         self.src_height = self.image.h // 10
+        self.delay_gethit = 0
 
         global BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_DOWN, BOUNDARY_UP
-        BOUNDARY_LEFT = self.image.w // 2
-        BOUNDARY_DOWN = self.image.h // 2
+        BOUNDARY_LEFT = -self.image.w // 10
+        BOUNDARY_DOWN = -self.image.h // 10
         BOUNDARY_RIGHT = get_canvas_width() - BOUNDARY_LEFT
         BOUNDARY_UP = get_canvas_height() - BOUNDARY_DOWN
 
     def update(self):
         self.collide(0)
         self.death()
+        if self.delay_gethit > 0:
+            self.delay_gethit -= 1
+
         if self.state == 0:
             x, y = self.x, self.y
-            x += self.dx * MOVE_PPS * gfw.delta_time
-            y += self.dy * MOVE_PPS * gfw.delta_time
             self.x, self.y = x, y
 
         if self.state == 1:
@@ -79,16 +81,25 @@ class Enemy:
         self.attacky = dy / 10
         
     def collide(self, state):
-        if state == 1:
-            return 1
-        else:
-            return 0
-
-    def decrease_life():
-        self.life -= 1
-        death
+        if state == 1 and self.state == 0:
+            self.life -= 1
+            self.state = 3
+            self.delay_gethit = 100
 
     def death(self):
         if self.x < BOUNDARY_LEFT or self.x > BOUNDARY_RIGHT or self.y < BOUNDARY_DOWN or self.y > BOUNDARY_UP:
             self.life = 0
         return self.life <= 0
+
+    def melee(self, p):
+        x, y= self.x, self.y
+        px, py = p.x, p.y
+        dx = px - x
+        dy = py - y
+        dist = math.sqrt(dx ** 2 + dy ** 2)
+        temp = ATTACK_DIST / dist
+        dx = dx * temp
+        dy = dy * temp
+        self.x = self.x + dx
+        self.y = self.y + dy
+        return x, y

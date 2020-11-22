@@ -20,19 +20,19 @@ class Player:
         self.attackx, self.attacky = 0, 0
         self.life = 3
         self.back = 0
-        self.state = 0 # 0 평소 1 공격 2 낙사
+        self.state = 0 # 0 평소 1 공격 2 낙사 3 무적
         self.radius = self.image.h // 40
         self.src_width = self.image.w // 7
         self.src_height = self.image.h // 10
 
         global BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_DOWN, BOUNDARY_UP
-        BOUNDARY_LEFT = self.image.w // 2
-        BOUNDARY_DOWN = self.image.h // 2
+        BOUNDARY_LEFT = -self.image.w // 10
+        BOUNDARY_DOWN = -self.image.h // 10
         BOUNDARY_RIGHT = get_canvas_width() - BOUNDARY_LEFT
         BOUNDARY_UP = get_canvas_height() - BOUNDARY_DOWN
 
     def update(self):
-        self.collide()
+        self.fall()
         self.death()
         print
         if self.state == 0:
@@ -44,20 +44,30 @@ class Player:
         if self.state == 1:
             if self.attackx < 0:
                 self.direction = 0
+                self.fidy = 2
             elif self.attackx > 0:
                 self.direction = 1
+                self.fidy = 7
             self.x += self.attackx
             self.y += self.attacky
             self.attackcount -= 1
+
             if self.attackcount == 0:
                 self.state = 0
                 if self.direction == 0 and self.keydown > 0:
                     self.fidy = 3
                 if self.direction == 1 and self.keydown > 0:
                     self.fidy = 8
-
+                if self.direction == 0 and self.keydown == 0:
+                    self.fidy = 4
+                if self.direction == 1 and self.keydown == 0:
+                    self.fidy = 9
 
         if self.state == 2:
+            self.x = self.x
+            self.y = self.y - 5
+
+        if self.state == 3:
             self.x = self.x
             self.y = self.y - 5
 
@@ -147,7 +157,7 @@ class Player:
         self.death()
         print(self.life)
 
-    def collide(self):
+    def fall(self):
         cx, cy = get_canvas_width() // 2, get_canvas_height() // 3
         fx, fy = self.ground_collide.w // 2, self.ground_collide.h // 2
         
@@ -157,7 +167,18 @@ class Player:
             self.state = 2
             self.back = 1
 
-    def death(self):
         if self.x < BOUNDARY_LEFT or self.x > BOUNDARY_RIGHT or self.y < BOUNDARY_DOWN or self.y > BOUNDARY_UP:
             self.life = 0
-        return self.life <= 0
+
+    def collide(self, state):
+        print(self.state, state)
+        if state == 0 and self.state == 0:
+            self.life -= 1
+            self.state = 3
+            self.death()
+
+    def death(self):
+        if self.life <= 0:
+            return 1
+        elif self.life > 0:
+            return 0
