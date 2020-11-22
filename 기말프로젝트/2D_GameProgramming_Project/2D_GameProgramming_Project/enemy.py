@@ -7,21 +7,17 @@ ATTACK_DIST = 80
 
 class Enemy:
     def __init__(self):
-        self.x = get_canvas_width() // 2
+        self.x = get_canvas_width() // 2 + 100
         self.y = get_canvas_height() // 3
-        self.image = gfw.image.load('res/Enemy_Melee.png')
+        self.image = gfw.image.load('res/Enemy_melee.png')
         self.dx, self.dy = 0, 0
         self.fidx, self.fidy = 0, 9
         self.direction = 0 # 0 왼쪽 1 오른쪽
-        self.keydown = 0
-        self.attackcount = 0
-        self.attackx, self.attacky = 0, 0
-        self.targets = []
         self.speed = 0
         self.life = 3
         self.back = 0
-        self.radius = self.image.h // 40
         self.state = 0 # 0 평소 1 공격 2 낙사
+        self.radius = self.image.h // 40
         self.src_width = self.image.w // 5
         self.src_height = self.image.h // 10
 
@@ -32,7 +28,7 @@ class Enemy:
         BOUNDARY_UP = get_canvas_height() - BOUNDARY_DOWN
 
     def update(self):
-        self.collide()
+        self.collide(0)
         self.death()
         if self.state == 0:
             x, y = self.x, self.y
@@ -82,8 +78,15 @@ class Enemy:
         self.attackx = dx / 10
         self.attacky = dy / 10
         
-    def collide(self):
-        pass
+    def collide(self, state):
+        if state == 1:
+            return 1
+        else:
+            return 0
+
+    def decrease_life():
+        self.life -= 1
+        death
 
     def death(self):
         if self.x < BOUNDARY_LEFT or self.x > BOUNDARY_RIGHT or self.y < BOUNDARY_DOWN or self.y > BOUNDARY_UP:

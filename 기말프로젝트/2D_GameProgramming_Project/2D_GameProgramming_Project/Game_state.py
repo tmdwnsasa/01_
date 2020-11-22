@@ -43,7 +43,10 @@ def update():
         return
     for o in gfw.world.objects_at(gfw.layer.enemy):
         if collides_distance(o, player):
-            gfw.world.remove(o);
+            if o.collide(player.state) == 0:
+                player.decrease_life()
+            elif o.collide(player.state) == 1:
+                o.decrease_life()
             dead = player.death()
             if dead:    #GAME OVER
                 game_state = STATE_GAME_OVER

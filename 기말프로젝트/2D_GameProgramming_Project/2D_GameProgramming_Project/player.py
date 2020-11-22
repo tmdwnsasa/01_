@@ -18,8 +18,6 @@ class Player:
         self.keydown = 0
         self.attackcount = 0
         self.attackx, self.attacky = 0, 0
-        self.targets = []
-        self.speed = 0
         self.life = 3
         self.back = 0
         self.state = 0 # 0 평소 1 공격 2 낙사
@@ -70,6 +68,7 @@ class Player:
         self.image.clip_draw(sx, sy, self.src_width, self.src_height, self.x, self.y)
         x = get_canvas_width() // 2
         y = get_canvas_height() // 3
+
         if self.state == 2 and self.back == 1:
             self.ground_collide2.draw(x, y)
             self.ground_collide.draw(x, y)
@@ -142,6 +141,12 @@ class Player:
         self.attackx = dx / 10
         self.attacky = dy / 10
         
+        
+    def decrease_life(self):
+        self.life -= 1
+        self.death()
+        print(self.life)
+
     def collide(self):
         cx, cy = get_canvas_width() // 2, get_canvas_height() // 3
         fx, fy = self.ground_collide.w // 2, self.ground_collide.h // 2
