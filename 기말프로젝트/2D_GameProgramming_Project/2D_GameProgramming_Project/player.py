@@ -3,7 +3,8 @@ import gfw
 import math
 
 MOVE_PPS = 300
-ATTACK_DIST = 80
+ATTACK_DIST = 150
+ANIMATION_D = 5
 
 class Player:
     def __init__(self):
@@ -20,10 +21,13 @@ class Player:
         self.attackx, self.attacky = 0, 0
         self.life = 3
         self.back = 0
-        self.state = 0 # 0 평소 1 공격 2 낙사 3 무적
+        self.state = 0 # 0 평소 1 공격 2 낙사 3 무적 4 사망
         self.radius = self.image.h // 40
         self.src_width = self.image.w // 7
         self.src_height = self.image.h // 10
+        self.delay_gethit = 0
+        self.animation_delay = 0
+        self.death_animation = 0
 
         global BOUNDARY_LEFT, BOUNDARY_RIGHT, BOUNDARY_DOWN, BOUNDARY_UP
         BOUNDARY_LEFT = -self.image.w // 10
@@ -34,7 +38,11 @@ class Player:
     def update(self):
         self.fall()
         self.death()
-        print
+        self.animation_delay -= 1
+
+        if self.animation_delay <= 0:
+            self.animation_delay = ANIMATION_D
+
         if self.state == 0:
             x, y = self.x, self.y
             x += self.dx * MOVE_PPS * gfw.delta_time
@@ -68,11 +76,27 @@ class Player:
             self.y = self.y - 5
 
         if self.state == 3:
-            self.x = self.x
-            self.y = self.y - 5
+            x, y = self.x, self.y
+            x += self.dx * MOVE_PPS * gfw.delta_time
+            y += self.dy * MOVE_PPS * gfw.delta_time
+            self.x, self.y = x, y
+            self.delay_gethit -= 1
+            if self.delay_gethit == 0:
+                self.state = 0
+
+        if self.state == 4:
+            if self.death_animation == 0:
+                self.animation_delay = 4
+                self.death_animation = 1         
+                self.fidx = 0
+            if self.direction == 0:
+                self.fidy = 0
+            if self.direction == 1:
+                self.fidy = 5
 
     def draw(self):
-        self.fidx = (self.fidx + 1) % 7
+        if self.animation_delay == 1:
+            self.fidx = (self.fidx + 1) % 7
         sx = self.fidx * self.src_width
         sy = self.fidy * self.src_height
         self.image.clip_draw(sx, sy, self.src_width, self.src_height, self.x, self.y)
@@ -87,22 +111,25 @@ class Player:
         if e.type == SDL_QUIT:
             gfw.quit()
         if e.type == SDL_KEYDOWN:
-            self.keydown += 1
             if e.key == SDLK_LEFT:
+                self.keydown += 1
                 self.direction = 0
                 self.fidy = 3
                 self.dx -= 1
             if e.key == SDLK_RIGHT:
+                self.keydown += 1
                 self.direction = 1
                 self.fidy = 8
                 self.dx += 1
             if e.key == SDLK_DOWN:
+                self.keydown += 1
                 if self.direction == 1:
                     self.fidy = 8
                 elif self.direction == 0:
                     self.fidy = 3
                 self.dy -= 1
             if e.key == SDLK_UP:
+                self.keydown += 1
                 if self.direction == 1:
                     self.fidy = 8
                 elif self.direction == 0:
@@ -111,6 +138,7 @@ class Player:
 
         if e.type == SDL_KEYUP:
             self.keydown -= 1
+            print("-")
             if e.key == SDLK_LEFT:
                 if self.keydown == 0:
                     self.fidy = 4
@@ -151,11 +179,9 @@ class Player:
         self.attackx = dx / 10
         self.attacky = dy / 10
         
-        
     def decrease_life(self):
         self.life -= 1
         self.death()
-        print(self.life)
 
     def fall(self):
         cx, cy = get_canvas_width() // 2, get_canvas_height() // 3
@@ -171,14 +197,15 @@ class Player:
             self.life = 0
 
     def collide(self, state):
-        print(self.state, state)
         if state == 0 and self.state == 0:
             self.life -= 1
             self.state = 3
+            self.delay_gethit = 100
             self.death()
 
     def death(self):
         if self.life <= 0:
+            self.state = 4
             return 1
         elif self.life > 0:
             return 0

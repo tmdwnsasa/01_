@@ -1,12 +1,15 @@
 from pico2d import *
 import gfw
 import random
+import obj_gen
 from player import Player
 from enemy import Enemy
 from bg import Bg
 from ground import Ground
 
 STATE_IN_GAME, STATE_GAME_OVER = range(2)
+global GAME_OVER
+GAME_OVER = 28
 
 def collides_distance(a, b):
     ax, ay = a.x, a.y
@@ -16,13 +19,11 @@ def collides_distance(a, b):
 
 def enter():
     gfw.world.init(['bg', 'ground', 'enemy', 'player'])
+    obj_gen.init()
+
     global player
     player = Player()
     gfw.world.add(gfw.layer.player, player)
-
-    global enemy
-    enemy = Enemy()
-    gfw.world.add(gfw.layer.enemy, enemy)
 
     global bg
     bg = Bg()
@@ -37,18 +38,30 @@ def enter():
 
 def update():
     global game_state
-    
-    print(enemy.life, "   ", player.life )
-    gfw.world.update();
-    enemy.melee(player)
+    global GAME_OVER
+
     if game_state != STATE_IN_GAME:
         return
-    if collides_distance(enemy, player):
-        enemy.collide(player.state)
-        player.collide(enemy.state)
-        dead = player.death()
-        if dead == 1:    #GAME OVER
+
+    dead = player.death()
+    if dead == 1:    #GAME OVER
+        GAME_OVER -= 1
+        if GAME_OVER <= 0:
             game_state = STATE_GAME_OVER
+
+    
+    gfw.world.update();
+    obj_gen.update()
+
+    for o in gfw.world.objects_at(gfw.layer.enemy):
+        if o.death() == 1:
+            gfw.world.remove(o);
+        o.move(player)
+        if collides_distance(o, player):
+            o.collide(player.state)
+            player.collide(o.state)
+        
+
 def draw():
     gfw.world.draw();
 
