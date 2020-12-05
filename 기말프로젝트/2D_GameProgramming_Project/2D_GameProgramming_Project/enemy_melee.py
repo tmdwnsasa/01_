@@ -5,7 +5,7 @@ import math
 MOVE_PPS = 300
 ATTACK_DIST = 0.5
 
-class Enemy:
+class Enemy_melee:
     def __init__(self, x, y):
         self.x = x
         self.y = y

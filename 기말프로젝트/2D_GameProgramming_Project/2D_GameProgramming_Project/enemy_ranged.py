@@ -5,11 +5,11 @@ import math
 MOVE_PPS = 300
 ATTACK_DIST = 0.5
 
-class Enemy:
+class Enemy_range:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.image = gfw.image.load('res/Enemy_melee.png')
+        self.image = gfw.image.load('res/Enemy_range.png')
         self.dx, self.dy = 0, 0
         self.fidx, self.fidy = 0, 8
         self.direction = 0 # 0 왼쪽 1 오른쪽

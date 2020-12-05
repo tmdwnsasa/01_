@@ -1,10 +1,12 @@
 from pico2d import *
 import gfw
 import random
-from enemy import Enemy
+from enemy_melee import Enemy_melee
+from enemy_ranged import Enemy_range
+from enemy_charged import Enemy_charge
 
 
-max_count = 1
+max_count = 4
 
 def init():
     global ground
@@ -40,10 +42,18 @@ def get_border_coords():
 
 def generate():
     x, y = get_border_coords()
-    e = Enemy(x,y)
-    gfw.world.add(gfw.layer.enemy, e)
+    which = random.randint(1, 3)
+    if which == 1:
+        e1 = Enemy_melee(x, y)
+        gfw.world.add(gfw.layer.enemy_melee, e1 )
+    if which == 2:
+        e2 = Enemy_range(x, y)
+        gfw.world.add(gfw.layer.enemy_range, e2 )
+    if which == 3:
+        e3 = Enemy_charge(x, y)
+        gfw.world.add(gfw.layer.enemy_charge, e3 )
 
 def update():
-    count = gfw.world.count_at(gfw.layer.enemy)
+    count = gfw.world.count_at(gfw.layer.enemy_melee) + gfw.world.count_at(gfw.layer.enemy_range) + gfw.world.count_at(gfw.layer.enemy_charge)
     if count < max_count:
         generate()

@@ -24,7 +24,13 @@
     <Compile Include="bg.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="enemy.py">
+    <Compile Include="enemy_charged.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="enemy_melee.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="enemy_ranged.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="game_state.py">

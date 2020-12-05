@@ -2,8 +2,8 @@ from pico2d import *
 import gfw
 import math
 
-MOVE_PPS = 300
-ATTACK_DIST = 150
+MOVE_PPS = 150
+ATTACK_DIST = 50
 ANIMATION_D = 5
 
 class Player:
@@ -73,7 +73,7 @@ class Player:
 
         if self.state == 2:
             self.x = self.x
-            self.y = self.y - 5
+            self.y = self.y
 
         if self.state == 3:
             x, y = self.x, self.y
@@ -173,8 +173,8 @@ class Player:
         dy = y - self.y
         dist = math.sqrt(dx ** 2 + dy ** 2)
         temp = ATTACK_DIST / dist
-        dx = dx * temp
-        dy = dy * temp
+        dx = dx * temp * 4
+        dy = dy * temp * 4
         self.attackcount = 10
         self.attackx = dx / 10
         self.attacky = dy / 10
