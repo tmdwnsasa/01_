@@ -52,7 +52,6 @@ class Bullet:
         pass
 
     def out_of_screen(self):
-        print(self.x)
         if self.x < BOUNDARY_LEFT: 
             return 1
         if self.x > BOUNDARY_RIGHT: 

@@ -48,7 +48,7 @@ def get_rand_pos():
     return x, y
 
 def generate():
-    which = random.randint(3, 3)
+    which = random.randint(1, 3)
     if which == 1:
         x, y = get_border_coords()
         e1 = Enemy_melee(x, y)

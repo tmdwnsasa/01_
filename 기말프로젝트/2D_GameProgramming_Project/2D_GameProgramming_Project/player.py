@@ -26,6 +26,7 @@ class Player:
         self.src_width = self.image.w // 7
         self.src_height = self.image.h // 10
         self.delay_gethit = 0
+        self.delay_attack = 30
         self.animation_delay = 0
         self.death_animation = 0
 
@@ -39,6 +40,9 @@ class Player:
         self.fall()
         self.death()
         self.animation_delay -= 1
+        print(self.delay_attack)
+        if self.delay_attack != 0:
+            self.delay_attack -= 1
 
         if self.animation_delay <= 0:
             self.animation_delay = ANIMATION_D
@@ -161,7 +165,8 @@ class Player:
                         self.fidy = 4
                 self.dy -= 1
 
-        elif e.type == SDL_MOUSEBUTTONDOWN:
+        elif e.type == SDL_MOUSEBUTTONDOWN and self.delay_attack == 0:
+            self.delay_attack = 30
             if self.attackcount == 0:
                 self.attack((e.x, get_canvas_height() - e.y - 1))
                 self.state = 1
@@ -196,7 +201,7 @@ class Player:
             self.life = 0
 
     def collide(self, state):
-        if state == 0 and self.state == 0:
+        if state == 1 and self.state == 0:
             self.life -= 1
             self.state = 3
             self.delay_gethit = 100
