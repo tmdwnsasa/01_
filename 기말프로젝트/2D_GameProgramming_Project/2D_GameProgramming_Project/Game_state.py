@@ -20,7 +20,7 @@ def collides_distance(a, b):
     return dist_sq < (a.radius + b.radius) ** 2
 
 def enter():
-    gfw.world.init(['bg', 'ground', 'enemy_melee','enemy_range','enemy_charge', 'player'])
+    gfw.world.init(['bg', 'ground', 'enemy_melee','enemy_range','enemy_charge', 'bullet' , 'player'])
     obj_gen.init()
 
     global player
@@ -67,6 +67,9 @@ def update():
         if o.death() == 1:
             gfw.world.remove(o)
         o.move(player)
+        if collides_distance(o, player):
+            o.collide(player.state)
+            player.collide(o.state)
 
     for o in gfw.world.objects_at(gfw.layer.enemy_charge):
         if o.death() == 1:
@@ -74,6 +77,13 @@ def update():
         o.move(player)
         if collides_distance(o, player):
             o.collide(player.state)
+            player.collide(o.state)
+
+    for o in gfw.world.objects_at(gfw.layer.bullet):
+        if o.out_of_screen() == 1:
+            gfw.world.remove(o)
+        if collides_distance(o, player):
+            gfw.world.remove(o)
             player.collide(o.state)
 
 def draw():

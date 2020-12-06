@@ -3,7 +3,7 @@ import gfw
 import math
 
 MOVE_PPS = 150
-ATTACK_DIST = 20
+ATTACK_DIST = 35
 ANIMATION_D = 5
 
 class Player:
@@ -174,9 +174,9 @@ class Player:
         temp = ATTACK_DIST / dist
         dx = dx * temp * 4
         dy = dy * temp * 4
-        self.attackcount = 10
-        self.attackx = dx / 10
-        self.attacky = dy / 10
+        self.attackcount = 5
+        self.attackx = dx / 5
+        self.attacky = dy / 5
         
     def decrease_life(self):
         self.life -= 1

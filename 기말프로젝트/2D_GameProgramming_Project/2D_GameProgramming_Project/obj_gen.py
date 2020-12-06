@@ -16,7 +16,6 @@ def init():
     BOUNDARY_DOWN = get_canvas_height() // 3 - ground.h // 2
     BOUNDARY_RIGHT = get_canvas_width() // 2 + ground.w // 2
     BOUNDARY_UP = get_canvas_height() // 3 + ground.h // 2
-    print(BOUNDARY_LEFT, BOUNDARY_DOWN, BOUNDARY_RIGHT, BOUNDARY_UP)
 
 def get_border_coords():
     cw, ch = get_canvas_width(), get_canvas_height()
@@ -40,16 +39,26 @@ def get_border_coords():
         y = BOUNDARY_UP
     return x, y
 
+def get_rand_pos():
+    cw, ch = get_canvas_width(), get_canvas_height()
+    sw, sh = ground.w, ground.h
+
+    x = random.random() * sw-sw/2 + cw // 2
+    y = random.random() * sh-sh/2 + ch // 3
+    return x, y
+
 def generate():
-    x, y = get_border_coords()
-    which = random.randint(2, 2)
+    which = random.randint(3, 3)
     if which == 1:
+        x, y = get_border_coords()
         e1 = Enemy_melee(x, y)
         gfw.world.add(gfw.layer.enemy_melee, e1 )
     if which == 2:
+        x, y = get_rand_pos()
         e2 = Enemy_range(x, y)
         gfw.world.add(gfw.layer.enemy_range, e2 )
     if which == 3:
+        x, y = get_border_coords()
         e3 = Enemy_charge(x, y)
         gfw.world.add(gfw.layer.enemy_charge, e3 )
 

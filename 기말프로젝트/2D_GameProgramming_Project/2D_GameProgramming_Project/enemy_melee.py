@@ -39,7 +39,6 @@ class Enemy_melee:
         self.collide(0)
         self.death()
         self.animation_delay -= 1
-        print(self.state)
         if self.animation_delay <= 0:
             self.animation_delay = 10
         if self.delay_gethit > 0:

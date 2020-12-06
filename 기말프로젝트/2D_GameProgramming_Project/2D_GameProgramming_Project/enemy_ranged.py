@@ -1,6 +1,8 @@
 from pico2d import *
 import gfw
 import math
+from bullet import Bullet
+
 
 MOVE_PPS = 300
 ATTACK_DIST = 0.5
@@ -11,19 +13,19 @@ class Enemy_range:
         self.y = y
         self.image = gfw.image.load('res/Enemy_range.png')
         self.dx, self.dy = 0, 0
-        self.fidx, self.fidy = 0, 8
+        self.fidx, self.fidy = 0, 9
         self.direction = 0 # 0 왼쪽 1 오른쪽
         self.speed = 0
         self.life = 3
         self.die = 0
         self.back = 0
         self.dist = 0
-        self.state = 0 # 0 평소 1 공격 2 무적(맞고 넉백)
+        self.state = 1 #1 공격 2 무적(맞고 넉백)
         self.radius = self.image.h // 40
         self.src_width = self.image.w // 5
         self.src_height = self.image.h // 10
         self.delay_gethit = 0
-        self.delay_attack = 0
+        self.delay_attack = 100
         self.delay_die = 40
         self.animation_delay = 0
         self.attack_check = 0
@@ -36,10 +38,8 @@ class Enemy_range:
         BOUNDARY_UP = get_canvas_height() - BOUNDARY_DOWN
 
     def update(self):
-        self.collide(0)
         self.death()
         self.animation_delay -= 1
-        print(self.state)
         if self.animation_delay <= 0:
             self.animation_delay = 10
         if self.delay_gethit > 0:
@@ -61,10 +61,10 @@ class Enemy_range:
         pass
         
     def collide(self, state):
-        if state == 1 and self.state == 0:
+        if state == 1 and self.state == 1:
             self.life -= 1
             self.state = 2
-            self.delay_gethit = 100
+            self.delay_gethit = 50
             self.fidx = 0
 
     def death(self):
@@ -84,18 +84,14 @@ class Enemy_range:
         self.dx = self.dx * temp
         self.dy = self.dy * temp
 
-        if self.state == 0:         #추격
-            if self.dx < 0:
-                self.fidy = 3
-                self.direction = 0
-            elif self.dx > 0:
-                self.fidy = 8
-                self.direction = 1
-            self.attack(self.dist, p)
-            self.x = self.x + self.dx
-            self.y = self.y + self.dy
-
         if self.state == 1:         #공격
+            if self.x < p.x:
+                direction = 1
+            if self.x > p.x:
+                direction = 0
+            self.delay_attack -= 1
+            if self.delay_attack == 0:
+                self.attack(p)
             self.attackcount -= 1
             if self.direction == 0:
                 self.fidy = 2
@@ -111,7 +107,7 @@ class Enemy_range:
             elif self.direction == 0:
                 self.fidy = 1
             if self.delay_gethit == 0:
-                self.state = 0
+                self.state = 1
 
         if self.state == 3:         #사망
             self.delay_die -= 1
@@ -121,23 +117,9 @@ class Enemy_range:
                 self.fidy = 0
             if self.delay_die == 0:
                 self.die = 1
-
-
-
         return x, y
     
-    def attack(self, dist, player):
-        if dist <= 40 and self.direction == 1 and self.attackcount == 0 and player.state == 0:
-            self.fidx = 0
-            self.fidy = 7
-            self.attackcount = 40
-            self.state = 1
-            self.dx = 0
-            self.dy = 0
-        elif dist <= 40 and self.direction == 0 and self.attackcount == 0 and player.state == 0:
-            self.fidx = 0
-            self.fidy = 2
-            self.attackcount = 40
-            self.state = 1
-            self.dx = 0
-            self.dy = 0
+    def attack(self, player):
+        self.delay_attack = 300
+        e4 = Bullet(self.x, self.y, player.x, player.y)
+        gfw.world.add(gfw.layer.bullet, e4)
