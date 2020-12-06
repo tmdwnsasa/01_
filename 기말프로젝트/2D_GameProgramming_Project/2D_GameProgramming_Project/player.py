@@ -3,7 +3,7 @@ import gfw
 import math
 
 MOVE_PPS = 150
-ATTACK_DIST = 50
+ATTACK_DIST = 20
 ANIMATION_D = 5
 
 class Player:
@@ -73,7 +73,7 @@ class Player:
 
         if self.state == 2:
             self.x = self.x
-            self.y = self.y
+            self.y -= 1
 
         if self.state == 3:
             x, y = self.x, self.y
@@ -138,7 +138,6 @@ class Player:
 
         if e.type == SDL_KEYUP:
             self.keydown -= 1
-            print("-")
             if e.key == SDLK_LEFT:
                 if self.keydown == 0:
                     self.fidy = 4

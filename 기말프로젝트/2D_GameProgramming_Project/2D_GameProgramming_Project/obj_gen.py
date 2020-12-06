@@ -42,7 +42,7 @@ def get_border_coords():
 
 def generate():
     x, y = get_border_coords()
-    which = random.randint(1, 3)
+    which = random.randint(2, 2)
     if which == 1:
         e1 = Enemy_melee(x, y)
         gfw.world.add(gfw.layer.enemy_melee, e1 )

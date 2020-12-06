@@ -119,9 +119,7 @@ class Enemy_charge:
     def attack(self, dist):
         if dist <= 40 and self.direction == 1:
             self.fidy = 7
-            self.fidx = 0
             self.dy = 0
         elif dist <= 40 and self.direction == 0:
-            self.fidy = 2
-            self.fidx = 0
+            self.fidy = 2   
             self.dy = 0

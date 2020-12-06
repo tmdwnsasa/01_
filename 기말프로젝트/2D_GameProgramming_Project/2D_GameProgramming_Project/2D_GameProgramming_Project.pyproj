@@ -24,6 +24,9 @@
     <Compile Include="bg.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="bullet.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="enemy_charged.py">
       <SubType>Code</SubType>
     </Compile>
