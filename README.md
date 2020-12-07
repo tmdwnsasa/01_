@@ -137,10 +137,17 @@
     **8주차** 
     
         마무리 : 최종 점검 및 제출
+        
 1차 발표 : https://youtu.be/0eNefvluy7c
+
 2차 발표 : https://youtu.be/rfUgQ1mBAcU
+
 3차 발표 : https://youtu.be/Kzhi27IsPDY
+
 구글 드라이브 : https://drive.google.com/file/d/1Pog2TOM8N8OADf4JGY-AlxxlGLydqwuq/view?usp=sharing
+
 최소범위 모두 구현완료
+
 최대범위 돌진과 근접 적 ai만 완료했습니다.
+
 커밋은 5주차 3회 6주차 1회 7주차 3회 8주차 4회정도 변화가 있었습니다.
