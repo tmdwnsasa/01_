@@ -142,7 +142,7 @@
 
 2차 발표 : https://youtu.be/rfUgQ1mBAcU
 
-3차 발표 : https://youtu.be/Kzhi27IsPDY
+3차 발표 : https://youtu.be/FqrEiYWKYLo
 
 구글 드라이브 : https://drive.google.com/file/d/1Pog2TOM8N8OADf4JGY-AlxxlGLydqwuq/view?usp=sharing
 
