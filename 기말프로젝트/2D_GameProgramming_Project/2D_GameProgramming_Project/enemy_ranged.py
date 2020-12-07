@@ -12,6 +12,10 @@ class Enemy_range:
         self.x = x
         self.y = y
         self.image = gfw.image.load('res/Enemy_range.png')
+        self.at_sound = load_wav('res/fire.wav')
+        self.at_sound.set_volume(30)
+        self.hi_sound = load_wav('res/hit.wav')
+        self.hi_sound.set_volume(100)
         self.dx, self.dy = 0, 0
         self.fidx, self.fidy = 0, 9
         self.direction = 0 # 0 왼쪽 1 오른쪽
@@ -66,6 +70,7 @@ class Enemy_range:
             self.state = 2
             self.delay_gethit = 50
             self.fidx = 0
+            self.hi_sound.play()
 
     def death(self):
         if self.x < BOUNDARY_LEFT or self.x > BOUNDARY_RIGHT or self.y < BOUNDARY_DOWN or self.y > BOUNDARY_UP:
@@ -121,5 +126,6 @@ class Enemy_range:
     
     def attack(self, player):
         self.delay_attack = 300
+        self.at_sound.play()
         e4 = Bullet(self.x, self.y, player.x, player.y)
         gfw.world.add(gfw.layer.bullet, e4)

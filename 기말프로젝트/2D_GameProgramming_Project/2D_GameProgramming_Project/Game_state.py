@@ -8,6 +8,7 @@ from enemy_ranged import Enemy_range
 from enemy_charged import Enemy_charge
 from bg import Bg
 from ground import Ground
+from stage_selector import stage
 
 STATE_IN_GAME, STATE_GAME_OVER = range(2)
 global GAME_OVER
@@ -24,12 +25,16 @@ def enter():
     gfw.world.init(['bg', 'ground', 'enemy_melee','enemy_range','enemy_charge', 'bullet' , 'player'])
     obj_gen.init()
 
+    global stage_sel
+    stage_sel = stage()
+
     global player
     player = Player()
     gfw.world.add(gfw.layer.player, player)
 
     global bg
     bg = Bg()
+    bg.image = gfw.image.load(stage_sel.bg_selector())
     gfw.world.add(gfw.layer.bg, bg)
 
     global ground
@@ -39,12 +44,19 @@ def enter():
     global game_state
     game_state = STATE_IN_GAME
 
+    global music_bg
+    music_bg= load_wav('res/Bg_music.wav')
+    music_bg.repeat_play()
+
 def update():
     global game_state
     global GAME_OVER
     global kill_count
     kill_count = 0
     bg.getpos_player(player)
+    stage_sel.update()
+    bg.image = gfw.image.load(stage_sel.bg_selector())
+    obj_gen.max_count = stage_sel.stage_num + 3
 
     if game_state != STATE_IN_GAME:
         return
@@ -64,14 +76,15 @@ def update():
             game_state = STATE_GAME_OVER
 
     
-    print(kill_count)
+    print(stage_sel.kill_count)
     gfw.world.update()
+
     if dead != 1:
         obj_gen.update()
     for o in gfw.world.objects_at(gfw.layer.enemy_melee):
         if o.death() == 1:
             gfw.world.remove(o)
-            kill_count += 1
+            stage_sel.kill_count += 1
         o.move(player)
         if collides_distance(o, player):
             o.collide(player.state)
@@ -80,7 +93,7 @@ def update():
     for o in gfw.world.objects_at(gfw.layer.enemy_range):
         if o.death() == 1:
             gfw.world.remove(o)
-            kill_count += 1
+            stage_sel.kill_count += 1
         o.move(player)
         if collides_distance(o, player):
             o.collide(player.state)
@@ -89,7 +102,7 @@ def update():
     for o in gfw.world.objects_at(gfw.layer.enemy_charge):
         if o.death() == 1:
             gfw.world.remove(o)
-            kill_count += 1
+            stage_sel.kill_count += 1
         o.move(player)
         if collides_distance(o, player):
             o.collide(player.state)
@@ -98,7 +111,7 @@ def update():
     for o in gfw.world.objects_at(gfw.layer.bullet):
         if o.out_of_screen() == 1:
             gfw.world.remove(o)
-            kill_count += 1
+            stage_sel.kill_count += 1
         if collides_distance(o, player):
             gfw.world.remove(o)
             player.collide(o.state)

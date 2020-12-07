@@ -10,6 +10,8 @@ class Enemy_melee:
         self.x = x
         self.y = y
         self.image = gfw.image.load('res/Enemy_melee.png')
+        self.hi_sound = load_wav('res/hit.wav')
+        self.hi_sound.set_volume(100)
         self.dx, self.dy = 0, 0
         self.fidx, self.fidy = 0, 8
         self.direction = 0 # 0 왼쪽 1 오른쪽
@@ -61,6 +63,7 @@ class Enemy_melee:
         
     def collide(self, state):
         if state == 1 and self.state == 0:
+            self.hi_sound.play()
             self.life -= 1
             self.state = 2
             self.delay_gethit = 100
@@ -95,7 +98,8 @@ class Enemy_melee:
             self.y = self.y + self.dy
 
         if self.state == 1:         #공격
-            self.attackcount -= 1
+            self.animation_delay -= 1
+            self.attackcount -= 2
             if self.direction == 0:
                 self.fidy = 2
             if self.direction == 1:

@@ -10,16 +10,23 @@ class Player:
     def __init__(self):
         self.x = get_canvas_width() // 2
         self.y = get_canvas_height() // 3
+        self.font = gfw.font.load('res/ConsolaMalgun.ttf', 35)
         self.image = gfw.image.load('res/player.png')
         self.ground_collide = gfw.image.load('res/Floor.png')
         self.ground_collide2 = gfw.image.load('res/Floor2.png')
+        self.heart_red = gfw.image.load('res/heart_red.png')
+        self.heart_white = gfw.image.load('res/heart_white.png')
+        self.at_sound1 = load_wav('res/attack.wav')
+        self.at_sound1.set_volume(100)
+        self.hr_sound1 = load_wav('res/hurt.wav')
+        self.hr_sound1.set_volume(100)
         self.dx, self.dy = 0, 0
         self.fidx, self.fidy = 0, 9
         self.direction = 0 # 0 왼쪽 1 오른쪽
         self.keydown = 0
         self.attackcount = 0
         self.attackx, self.attacky = 0, 0
-        self.life = 3
+        self.life = 5
         self.back = 0
         self.state = 0 # 0 평소 1 공격 2 낙사 3 무적 4 사망
         self.radius = self.image.h // 40
@@ -103,12 +110,19 @@ class Player:
         sx = self.fidx * self.src_width
         sy = self.fidy * self.src_height
         self.image.clip_draw(sx, sy, self.src_width, self.src_height, self.x, self.y)
-
+        x = get_canvas_width() - 30 #오른쪽
+        y = get_canvas_height() - 30 #아래
+        for i in range(self.life):
+            heart = self.heart_red if i < self.life else self.heart_white
+            heart.draw(x, y)
+            x -= heart.w
+        pos = 30, get_canvas_height() - 30
         x = get_canvas_width() // 2
         y = get_canvas_height() // 3
         if self.state == 2 and self.back == 1:
             self.ground_collide2.draw(x, y)
             self.ground_collide.draw(x, y)
+        #self.font.draw(*pos, 'Score: %.1f' % self.score, SCORE_TEXT_COLOR)
 
     def handle_event(self, e):
         if e.type == SDL_QUIT:
@@ -167,6 +181,7 @@ class Player:
         elif e.type == SDL_MOUSEBUTTONDOWN and self.delay_attack == 0:
             self.delay_attack = 30
             if self.attackcount == 0:
+                self.at_sound1.play()
                 self.attack((e.x, get_canvas_height() - e.y - 1))
                 self.state = 1
 
@@ -182,9 +197,6 @@ class Player:
         self.attackx = dx / 5
         self.attacky = dy / 5
         
-    def decrease_life(self):
-        self.life -= 1
-        self.death()
 
     def fall(self):
         cx, cy = get_canvas_width() // 2, get_canvas_height() // 3
@@ -202,6 +214,7 @@ class Player:
     def collide(self, state):
         if state == 1 and self.state == 0:
             self.life -= 1
+            self.hr_sound1.play()
             self.state = 3
             self.delay_gethit = 100
             self.death()

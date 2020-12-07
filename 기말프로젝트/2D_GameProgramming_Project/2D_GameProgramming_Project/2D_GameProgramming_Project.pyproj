@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b9399fa5-0323-47cb-9cfe-ff573343d605</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>game_state.py</StartupFile>
+    <StartupFile>title_state.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -53,6 +53,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="stage_selector.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="title_state.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

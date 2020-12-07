@@ -12,7 +12,7 @@ class Bullet:
         self.image = gfw.image.load('res/bullet.png')
         self.fidx, self.fidy = 0, 0
         self.speed = 0
-        self.state = 0 # 0 날라가는 중
+        self.state = 1 # 0 날라가는 중
         self.radius = self.image.h // 4
         self.src_width = self.image.w // 5
         self.src_height = self.image.h

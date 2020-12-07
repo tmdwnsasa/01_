@@ -6,7 +6,7 @@ from enemy_ranged import Enemy_range
 from enemy_charged import Enemy_charge
 
 
-max_count = 4
+max_count = 3
 
 def init():
     global ground

@@ -12,6 +12,8 @@ class Enemy_charge:
         self.x = x
         self.y = y
         self.image = gfw.image.load('res/Enemy_charge.png')
+        self.hi_sound = load_wav('res/hit.wav')
+        self.hi_sound.set_volume(100)
         self.dx, self.dy = 0, 0
         self.fidx, self.fidy = 0, 9
         self.direction = 0 # 0 왼쪽 1 오른쪽
@@ -65,6 +67,7 @@ class Enemy_charge:
             self.life -= 1
             self.state = 2
             self.delay_gethit = 50
+            self.hi_sound.play()
             self.fidx = 0
 
     def death(self):
