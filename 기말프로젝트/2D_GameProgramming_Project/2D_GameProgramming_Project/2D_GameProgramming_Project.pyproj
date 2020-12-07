@@ -52,6 +52,9 @@
     <Compile Include="player.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="stage_selector.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="gfw\" />

@@ -11,6 +11,7 @@ from ground import Ground
 
 STATE_IN_GAME, STATE_GAME_OVER = range(2)
 global GAME_OVER
+global kill_count
 GAME_OVER = 28
 
 def collides_distance(a, b):
@@ -41,23 +42,36 @@ def enter():
 def update():
     global game_state
     global GAME_OVER
+    global kill_count
+    kill_count = 0
+    bg.getpos_player(player)
 
     if game_state != STATE_IN_GAME:
         return
 
     dead = player.death()
     if dead == 1:    #GAME OVER
+        for o in gfw.world.objects_at(gfw.layer.enemy_melee):
+            gfw.world.remove(o)
+        for o in gfw.world.objects_at(gfw.layer.enemy_range):
+            gfw.world.remove(o)
+        for o in gfw.world.objects_at(gfw.layer.enemy_charge):
+            gfw.world.remove(o)
+        for o in gfw.world.objects_at(gfw.layer.bullet):
+            gfw.world.remove(o)
         GAME_OVER -= 1
         if GAME_OVER <= 0:
             game_state = STATE_GAME_OVER
 
     
+    print(kill_count)
     gfw.world.update()
-    obj_gen.update()
-
+    if dead != 1:
+        obj_gen.update()
     for o in gfw.world.objects_at(gfw.layer.enemy_melee):
         if o.death() == 1:
             gfw.world.remove(o)
+            kill_count += 1
         o.move(player)
         if collides_distance(o, player):
             o.collide(player.state)
@@ -66,6 +80,7 @@ def update():
     for o in gfw.world.objects_at(gfw.layer.enemy_range):
         if o.death() == 1:
             gfw.world.remove(o)
+            kill_count += 1
         o.move(player)
         if collides_distance(o, player):
             o.collide(player.state)
@@ -74,6 +89,7 @@ def update():
     for o in gfw.world.objects_at(gfw.layer.enemy_charge):
         if o.death() == 1:
             gfw.world.remove(o)
+            kill_count += 1
         o.move(player)
         if collides_distance(o, player):
             o.collide(player.state)
@@ -82,6 +98,7 @@ def update():
     for o in gfw.world.objects_at(gfw.layer.bullet):
         if o.out_of_screen() == 1:
             gfw.world.remove(o)
+            kill_count += 1
         if collides_distance(o, player):
             gfw.world.remove(o)
             player.collide(o.state)

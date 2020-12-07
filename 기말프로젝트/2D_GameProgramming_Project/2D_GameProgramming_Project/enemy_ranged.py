@@ -20,7 +20,7 @@ class Enemy_range:
         self.die = 0
         self.back = 0
         self.dist = 0
-        self.state = 1 #1 공격 2 무적(맞고 넉백)
+        self.state = 0 #0 공격 2 무적(맞고 넉백)
         self.radius = self.image.h // 40
         self.src_width = self.image.w // 5
         self.src_height = self.image.h // 10
@@ -61,7 +61,7 @@ class Enemy_range:
         pass
         
     def collide(self, state):
-        if state == 1 and self.state == 1:
+        if state == 1 and self.state == 0:
             self.life -= 1
             self.state = 2
             self.delay_gethit = 50
@@ -84,7 +84,7 @@ class Enemy_range:
         self.dx = self.dx * temp
         self.dy = self.dy * temp
 
-        if self.state == 1:         #공격
+        if self.state == 0:         #공격
             if self.x < p.x:
                 direction = 1
             if self.x > p.x:
@@ -107,7 +107,7 @@ class Enemy_range:
             elif self.direction == 0:
                 self.fidy = 1
             if self.delay_gethit == 0:
-                self.state = 1
+                self.state = 0
 
         if self.state == 3:         #사망
             self.delay_die -= 1

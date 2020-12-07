@@ -40,7 +40,6 @@ class Player:
         self.fall()
         self.death()
         self.animation_delay -= 1
-        print(self.delay_attack)
         if self.delay_attack != 0:
             self.delay_attack -= 1
 
@@ -77,7 +76,7 @@ class Player:
 
         if self.state == 2:
             self.x = self.x
-            self.y -= 1
+            self.y -= 4
 
         if self.state == 3:
             x, y = self.x, self.y
@@ -104,9 +103,9 @@ class Player:
         sx = self.fidx * self.src_width
         sy = self.fidy * self.src_height
         self.image.clip_draw(sx, sy, self.src_width, self.src_height, self.x, self.y)
+
         x = get_canvas_width() // 2
         y = get_canvas_height() // 3
-
         if self.state == 2 and self.back == 1:
             self.ground_collide2.draw(x, y)
             self.ground_collide.draw(x, y)

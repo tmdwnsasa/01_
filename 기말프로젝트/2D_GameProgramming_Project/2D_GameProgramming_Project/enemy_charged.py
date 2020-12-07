@@ -115,7 +115,6 @@ class Enemy_charge:
             self.attack(p)
             self.x = self.x + self.attackx
             self.y = self.y + self.attacky
-            print(self.delay_attack, ', ', self.state)
 
         if self.state == 2:         #경직
             self.delay_gethit -= 1
